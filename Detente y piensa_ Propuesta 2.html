@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detente y piensa | Propuesta 2: Automedicación</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500&display=swap">
+<style>
+:root{
+  --celeste:#9FE7F5; --azul:#429EBD; --marino:#053F5C; --ambar:#F7AD19; --rojo:#D6325C;
+  --bg:#F4F9FC; --surface:#FFFFFF; --text:#053F5C; --muted:#4A6B7C; --line:#CFE3EC;
+  --f-title:'Poppins',system-ui,sans-serif; --f-body:'Roboto',system-ui,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#04293B;--surface:#073A55;--text:#E8F7FB;--muted:#9CC3D1;--line:#0E5272}}
+:root[data-theme="dark"]{--bg:#04293B;--surface:#073A55;--text:#E8F7FB;--muted:#9CC3D1;--line:#0E5272}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;height:auto}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 var(--f-body)}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:88px;overflow-x:hidden}
+h1,h2,h3{font-family:var(--f-title);line-height:1.2;margin:0 0 .5em}
+h2{font-size:1.5rem;font-weight:700}
+p{margin:0 0 1em}
+section{padding:42px 22px}
+.kicker{font:600 .75rem var(--f-title);letter-spacing:.12em;text-transform:uppercase;color:var(--azul);margin-bottom:6px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+.btn{font:600 1rem var(--f-title);border:0;border-radius:999px;padding:14px 26px;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn-light{background:#fff;color:var(--marino)}
+.btn-teal{background:var(--azul);color:#fff}
+.btn-block{display:block;width:100%;text-align:center}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.link{background:none;border:0;color:var(--muted);font:500 .95rem var(--f-title);cursor:pointer;text-decoration:underline}
+
+/* HERO */
+.hero{background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 28px,transparent 28px 56px),linear-gradient(170deg,var(--azul),var(--marino));color:#fff;padding:48px 24px 50px;border-radius:0 0 48px 48px;position:relative;overflow:hidden}
+.hero h1{font-size:2.15rem;font-weight:800;max-width:14ch}
+.hero h1 em{font-style:normal;color:var(--ambar)}
+.hero p{color:#E3F6FA;max-width:32ch}
+.pill{position:absolute;right:-26px;top:34px;width:150px;height:62px;border-radius:40px;transform:rotate(-32deg);overflow:hidden;display:flex;box-shadow:0 12px 30px rgba(0,0,0,.25);animation:flota 4s ease-in-out infinite}
+.pill i{flex:1;background:var(--ambar)} .pill b{flex:1;background:#fff}
+.stop{position:absolute;right:46px;top:96px;width:44px;height:44px;border-radius:50%;background:var(--rojo);color:#fff;display:grid;place-items:center;font:800 1.5rem var(--f-title);border:3px solid #fff;animation:latido 1.6s ease-out 1}
+@keyframes flota{50%{transform:rotate(-32deg) translateY(-8px)}}
+@keyframes latido{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+.aviso{display:flex;gap:10px;background:rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;font-size:.86rem;margin:22px 0 26px}
+.aviso svg{flex:none;width:20px;height:20px}
+
+/* SEMÁFORO */
+.nivel{background:var(--surface);border:1px solid var(--line);border-left:8px solid;border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.nivel h3{font-size:1.02rem;margin:0 0 2px}.nivel p{margin:0;color:var(--muted);font-size:.92rem}
+.n-azul{border-left-color:var(--azul)}.n-amarillo{border-left-color:var(--ambar)}.n-rojo{border-left-color:var(--rojo)}
+
+/* EVALUACIÓN */
+#evaluacion{background:var(--surface);border-radius:36px 36px 0 0}
+.barra{display:flex;gap:6px;margin:8px 0 22px}
+.barra span{flex:1;height:8px;border-radius:8px;background:var(--line);transition:background .3s}
+.barra span.on{background:var(--azul)}
+.cont{font:500 .85rem var(--f-title);color:var(--muted)}
+.pregunta{font:600 1.2rem var(--f-title);margin-bottom:18px}
+.opcion{display:flex;align-items:center;gap:14px;width:100%;text-align:left;font:500 1rem var(--f-title);color:var(--text);background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,background .2s}
+.opcion .dot{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--azul);display:grid;place-items:center}
+.opcion.sel{border-color:var(--azul);background:rgba(66,158,189,.12)}
+.opcion.sel .dot{background:var(--azul)}
+.opcion.sel .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.nav-eval{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px}
+
+/* RESULTADO */
+.res{border-radius:28px;padding:24px 20px 26px;text-align:center;color:#fff}
+.res.azul{background:var(--azul)}.res.amarillo{background:var(--ambar);color:var(--marino)}.res.rojo{background:var(--rojo)}
+.gauge{width:100%;max-width:300px;margin:6px auto 0;display:block}
+.gauge .aguja{transform-origin:100px 100px;transform:rotate(-90deg);transition:transform 1.2s cubic-bezier(.2,.9,.3,1.2)}
+.pct{font:800 3.6rem/1 var(--f-title);margin-top:-6px}
+.etq{font:700 1.15rem var(--f-title);margin:6px 0 10px}
+.consejo{background:rgba(255,255,255,.2);border-radius:16px;padding:14px;font-size:.93rem}
+.acciones{list-style:none;padding:0;margin:16px 0 22px}
+.acciones li{display:flex;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;font-size:.94rem}
+.acciones li::before{content:"→";font:700 1rem var(--f-title);color:var(--rojo)}
+
+/* MITOS */
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:16px 18px;font:600 1rem var(--f-title);display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--rojo);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 18px;margin:0 0 16px;color:var(--muted);font-size:.94rem}
+details p b{font-family:var(--f-title);color:var(--azul)}
+
+/* RECURSOS */
+.tarjeta{border-radius:22px;padding:22px;margin-bottom:14px}
+.t-azul{background:var(--marino);color:#fff}.t-azul p{color:#D5EEF5}
+.t-amb{background:var(--ambar);color:var(--marino)}
+.tarjeta h3{font-size:1.12rem}.tarjeta p:last-child{margin:0}
+.tarjeta ul{margin:0;padding-left:1.1em}
+footer{padding:10px 22px 30px;color:var(--muted);font-size:.82rem}
+
+/* DOCK */
+.dock{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:flex;justify-content:space-around;background:var(--surface);border-top:1px solid var(--line);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));z-index:10}
+.dock a{display:flex;flex-direction:column;align-items:center;gap:2px;font:500 .72rem var(--f-title);color:var(--muted);text-decoration:none;min-width:64px}
+.dock svg{width:24px;height:24px}.dock a.on{color:var(--rojo)}
+
+.rev{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}.rev.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rev{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<main class="app">
+
+<header class="hero" id="inicio">
+  <div class="pill" aria-hidden="true"><i></i><b></b></div>
+  <div class="stop" aria-hidden="true">!</div>
+  <h1 style="margin-top:96px">Antes de tomarlo, <em>detente y piensa.</em></h1>
+  <p>Responde 8 preguntas breves y descubre tu nivel de riesgo al automedicarte.</p>
+  <div class="aviso">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    <span>Herramienta educativa. No es un diagnóstico ni reemplaza la consulta con un profesional de salud.</span>
+  </div>
+  <a href="#evaluacion" class="btn btn-light">Comenzar evaluación</a>
+</header>
+
+<section>
+  <div class="kicker rev">Cómo leer el resultado</div>
+  <h2 class="rev">Un semáforo de tres colores</h2>
+  <div class="nivel n-azul rev"><h3>Azul · Está bien</h3><p>Riesgo bajo. Decisión informada.</p></div>
+  <div class="nivel n-amarillo rev"><h3>Amarillo · No tan recomendado</h3><p>Riesgo medio. Aclara tus dudas antes de tomarlo.</p></div>
+  <div class="nivel n-rojo rev"><h3>Rojo · Riesgoso</h3><p>Riesgo alto. Consulta a un profesional antes de tomarlo.</p></div>
+</section>
+
+<section id="evaluacion">
+  <div class="kicker">Evaluación</div>
+  <h2>¿Qué tan seguro es lo que vas a hacer?</h2>
+  <div id="eval"></div>
+</section>
+
+<section id="mitos">
+  <div class="kicker rev">Mitos y realidad</div>
+  <h2 class="rev">Lo que creemos, y lo que pasa</h2>
+  <details class="rev"><summary>«Si me sirvió a mí antes, le sirve a otra persona»</summary><p><b>Realidad:</b> cada cuerpo responde distinto. Edad, peso, alergias y otros medicamentos cambian el efecto.</p></details>
+  <details class="rev"><summary>«Si es natural o de venta libre, no hace daño»</summary><p><b>Realidad:</b> también tiene dosis máximas, contraindicaciones e interacciones.</p></details>
+  <details class="rev"><summary>«Más dosis, alivio más rápido»</summary><p><b>Realidad:</b> exceder la dosis no acelera el efecto y puede dañar el hígado, los riñones o el estómago.</p></details>
+  <details class="rev"><summary>«Los antibióticos sirven para cualquier infección»</summary><p><b>Realidad:</b> no actúan contra virus como el resfriado o la gripe. Su mal uso genera resistencia bacteriana.</p></details>
+</section>
+
+<section id="recursos" style="padding-top:0">
+  <div class="tarjeta t-azul rev">
+    <h3>Ayuda inmediata</h3>
+    <p>Si tomaste algo y sientes mareo, dificultad para respirar, vómitos o reacción en la piel, busca atención médica de inmediato o llama al número de emergencias de tu país.</p>
+  </div>
+  <div class="tarjeta t-amb rev">
+    <h3>Antes de cada toma</h3>
+    <ul>
+      <li>Lee el prospecto completo.</li>
+      <li>Revisa vencimiento y empaque.</li>
+      <li>Respeta dosis y horarios.</li>
+      <li>Pregunta a tu médico o farmacéutico por interacciones.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>Proyecto académico de concientización. No constituye diagnóstico ni consejo médico.</footer>
+</main>
+
+<nav class="dock" aria-label="Navegación">
+  <a href="#evaluacion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Evaluar</a>
+  <a href="#inicio" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg>Inicio</a>
+  <a href="#mitos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/></svg>Mitos</a>
+  <a href="#recursos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>Ayuda</a>
+</nav>
+
+<script>
+// o: [texto, puntos]; f: factor detectado; a: acción recomendada
+const Q=[
+ {t:'¿Un profesional de salud te recomendó este medicamento?',f:1,a:'Consulta a un médico o farmacéutico antes de tomarlo.',o:[['Sí',0],['No, lo decidí por mi cuenta',3]]},
+ {t:'¿Sabes para qué sirve y cómo se usa?',a:'Lee el prospecto y confirma su uso con un farmacéutico.',o:[['Sí, lo conozco bien',0],['Más o menos',2],['No lo conozco',3]]},
+ {t:'¿Tomas actualmente otros medicamentos?',a:'Pregunta por interacciones: algunos combinados pueden ser peligrosos.',o:[['Ninguno',0],['Uno o dos',2],['Varios',3]]},
+ {t:'¿Conoces la dosis correcta y cada cuánto tomarla?',a:'Anota la dosis y el horario indicados; nunca los dupliques.',o:[['Sí, la leí o me la indicaron',0],['No estoy seguro/a',2],['No la conozco',3]]},
+ {t:'¿Tienes alergias o una enfermedad crónica?',a:'Informa tus alergias o enfermedades a un profesional antes de tomar algo.',o:[['No',0],['No estoy seguro/a',2],['Sí',3]]},
+ {t:'¿Revisaste el vencimiento y el estado del empaque?',a:'Revisa fecha de vencimiento, sellado y almacenamiento.',o:[['Sí, todo en orden',0],['No lo revisé',2]]},
+ {t:'¿Es para una persona embarazada, en lactancia, un niño o un adulto mayor?',a:'En estos grupos las dosis y riesgos cambian: consulta siempre antes.',o:[['No',0],['No estoy seguro/a',2],['Sí',3]]},
+ {t:'¿Cómo están tus síntomas?',a:'Si pasan de 3 días o empeoran, acude a consulta en lugar de seguir tomando.',o:[['Recientes y leves',0],['Llevan más de 3 días',2],['Empeoran o son intensos',3]]}
+];
+const MAX=Q.reduce((s,p)=>s+Math.max(...p.o.map(x=>x[1])),0);
+const N={
+ azul:{e:'Riesgo bajo',x:'Tu decisión parece informada. Aun así, lee el prospecto y respeta la dosis.'},
+ amarillo:{e:'Riesgo medio',x:'Hay dudas por aclarar. Consulta a un farmacéutico o médico antes de tomarlo.'},
+ rojo:{e:'Riesgo alto',x:'Lo más seguro es consultar a un profesional de salud antes de tomar cualquier medicamento.'}
+};
+let paso=0,resp=[];const el=document.getElementById('eval');
+
+function pregunta(){
+  const p=Q[paso],n=Q.length;
+  el.innerHTML=`<div class="cont">Pregunta ${paso+1} de ${n}</div>
+  <div class="barra" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${paso+1}">${Q.map((_,i)=>`<span class="${i<=paso?'on':''}"></span>`).join('')}</div>
+  <p class="pregunta">${p.t}</p>
+  <div role="radiogroup">${p.o.map((o,i)=>`<button class="opcion${resp[paso]===i?' sel':''}" role="radio" aria-checked="${resp[paso]===i}" data-i="${i}"><span class="dot"></span>${o[0]}</button>`).join('')}</div>
+  <div class="nav-eval"><button class="link" id="atras" ${paso===0?'hidden':''}>Atrás</button>
+  <button class="btn btn-teal" id="sig" ${resp[paso]===undefined?'disabled':''}>${paso===n-1?'Ver resultado':'Siguiente'}</button></div>`;
+  el.querySelectorAll('.opcion').forEach(b=>b.onclick=()=>{resp[paso]=+b.dataset.i;pregunta()});
+  document.getElementById('atras').onclick=()=>{paso--;pregunta()};
+  document.getElementById('sig').onclick=()=>{paso<n-1?(paso++,pregunta()):resultado()};
+}
+
+function resultado(){
+  let s=0,acc=[];
+  Q.forEach((p,i)=>{const v=p.o[resp[i]][1];s+=v;if(v>0)acc.push(p.a)});
+  const pct=Math.round(s/MAX*100),nv=pct>=67?'rojo':pct>=34?'amarillo':'azul';
+  el.innerHTML=`<div class="res ${nv}" aria-live="polite">
+   <svg class="gauge" viewBox="0 0 200 112" aria-hidden="true">
+    <path d="M20 100A80 80 0 0 1 180 100" pathLength="100" fill="none" stroke="#429EBD" stroke-width="16" stroke-dasharray="33 100"/>
+    <path d="M20 100A80 80 0 0 1 180 100" pathLength="100" fill="none" stroke="#F7AD19" stroke-width="16" stroke-dasharray="0 34 33 100"/>
+    <path d="M20 100A80 80 0 0 1 180 100" pathLength="100" fill="none" stroke="#D6325C" stroke-width="16" stroke-dasharray="0 67 33 100"/>
+    <g class="aguja" id="aguja"><line x1="100" y1="100" x2="100" y2="34" stroke="#053F5C" stroke-width="5" stroke-linecap="round"/></g>
+    <circle cx="100" cy="100" r="9" fill="#053F5C" stroke="#fff" stroke-width="3"/>
+   </svg>
+   <div class="pct">${pct}%</div><div class="etq">${N[nv].e}</div><div class="consejo">${N[nv].x}</div></div>
+  <h3 style="margin-top:24px">Qué puedes hacer ahora</h3>
+  ${acc.length?`<ul class="acciones">${acc.map(a=>`<li>${a}</li>`).join('')}</ul>`:'<p>No se detectaron factores de riesgo. Mantén estos buenos hábitos.</p>'}
+  <button class="btn btn-teal btn-block" id="otra">Evaluar otro medicamento</button>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{document.getElementById('aguja').style.transform=`rotate(${pct*1.8-90}deg)`}));
+  document.getElementById('otra').onclick=()=>{paso=0;resp=[];pregunta()};
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+pregunta();
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.rev').forEach(n=>io.observe(n));
+const L=[...document.querySelectorAll('.dock a')];
+const io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)L.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id))}),{threshold:.4});
+['inicio','evaluacion','mitos','recursos'].forEach(id=>io2.observe(document.getElementById(id)));
+</script>
+</body>
+</html>
